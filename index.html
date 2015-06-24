@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <style type="text/css">
+          html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
+        </style>
+        <!--script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhN1MsHyW9dQOapG_YG0869FbJ58ewvPI">
+        </script-->
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+        <script type="text/javascript">
+          function initialize() {
+
+
+        //featured style
+            var styleArray = [
+                {
+                  featureType: 'all',
+                  stylers: [
+                    { saturation: -80 }
+                  ]
+                },{
+                  featureType: 'road.arterial',
+                  elementType: 'geometry',
+                  stylers: [
+                    { hue: '#ff0000' },
+                    { saturation: 100 }
+                  ]
+                },{
+                  featureType: 'poi.business',
+                  elementType: 'labels',
+                  stylers: [
+                    { visibility: 'on' }
+                  ]
+                }
+            ];
+
+            var mapOptions = {
+              center: { lat: 31.2, lng: 121.5},
+              zoom: 15
+              //styles: styleArray
+              //mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            //var map = new google.maps.Map(document.getElementById('map-canvas'),
+              //  mapOptions);
+
+
+            var goldStar = {
+                path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+                fillColor: 'yellow',
+                fillOpacity: 0.8,
+                scale: 1,
+                strokeColor: 'gold',
+                strokeWeight: 14
+            };
+
+         /*   var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: goldStar,
+                draggable: true,
+                map: map
+            });*/
+
+
+
+            var image = './favicon.ico';
+            var myLatLng = {lat: 31.2, lng: 122};
+            /*var beachMarker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                icon: image,
+                draggable: true,
+            });*/
+
+            //place library
+            var shanghai = new google.maps.LatLng(31.2,121.5);
+            var request = {
+                location: shanghai,
+                radius: '500',
+                types: ['restaurant']
+               // query: 'restaurant'
+            };
+            var request2 = {
+                location: shanghai,
+                radius: '500',
+                query: 'bank'
+            };
+
+            
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), {
+                    center: shanghai,
+                    zoom: 15
+                });
+
+                service = new google.maps.places.PlacesService(map);
+                service.nearbySearch(request, callback);
+                service.textSearch(request2, callback);
+            }
+
+          google.maps.event.addDomListener(window, 'load', initialize);
+
+        
+          function callback(results,status){
+
+            var stat = google.maps.places.PlacesServiceStatus.OK;
+            if( status === stat && results[0].types[0] === 'restaurant'){
+                for(var i = 0; i< results.length; i++){
+                    var place = results[i];
+                    createMarker(results[i]);
+                }
+            }else if(status === stat && results[0].types[0] === 'bank'){
+                for(var i = 0; i< results.length; i++){
+                    var place = results[i];
+                    createMarker(results[i]);
+                }
+            }
+          }
+
+          function createMarker(place) {
+              var marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    icon: {
+                      // Star
+                      path: 'M 0,-24 6,-7 24,-7 10,4 15,21 0,11 -15,21 -10,4 -24,-7 -6,-7 z',
+                      fillColor: '#ffff00',
+                      fillOpacity: 1,
+                      scale: 1/2,
+                      strokeColor: '#bd8d2c',
+                      strokeWeight: 1
+                    }
+              });
+          }
+        </script>
+
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        
+
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <p>Google Map Demo</p>
+        <img src="img/powered-by-google-on-white.png">
+
+        <div id="map-canvas"></div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>
